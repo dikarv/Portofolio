@@ -1,11 +1,11 @@
 package domain
 
 type CustomerService interface {
-	GetListCustomer(customerId int) ([]AgentData, ErrorData)
+	GetListCustomer() ([]AgentData, ErrorData)
 }
 
 type CustomerRepository interface {
-	GetListCustomer(customerId int) ([]AgentData, ErrorData)
+	GetListCustomer() ([]AgentData, ErrorData)
 }
 
 type AgentData struct {

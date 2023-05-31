@@ -1,13 +1,14 @@
 {
     "database" : {
-        "server"   : "127.0.0.1",
+        "server"   : "tcp(localhost:3306)",
+        "server2"   :"2",
         "user"     : "root",
         "password" : "",
         "schema"   : "pt_xyz_multifinance"
     },
     "timeout": 100,
     "host"         : "127.0.0.1",
-    "port"         : "3306",
+    "port"         : "5025",
     "environment"  : "development",
 
     "token":{

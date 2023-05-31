@@ -5,13 +5,14 @@ import (
 	"apixyz/src/apixyz/domain"
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
 )
 
 type CustomerRepoImpl struct {
 }
 
-func (c CustomerRepoImpl) GetListCustomer(customerId int) ([]domain.AgentData, domain.ErrorData) {
+func (c CustomerRepoImpl) GetListCustomer() ([]domain.AgentData, domain.ErrorData) {
 	var result []domain.AgentData
 	var errorResponse domain.ErrorData
 	var rows *sql.Rows
@@ -19,19 +20,17 @@ func (c CustomerRepoImpl) GetListCustomer(customerId int) ([]domain.AgentData, d
 
 	dbsks, err := database.GetConnectionSKS()
 	if err != nil {
+		fmt.Println("Error disini ", errquery)
+
 		errorResponse.Status = http.StatusInternalServerError
 		errorResponse.Message = errors.New("DB SKS Connection Closed")
 		return nil, errorResponse
 	}
 
-	if customerId != 0 {
-		rows, errquery = dbsks.Query("SELECT * FROM customers WHERE ID = ?", customerId)
+	rows, errquery = dbsks.Query("SELECT * FROM customers")
 
-	} else {
-		rows, errquery = dbsks.Query("SELECT * FROM customers")
-
-	}
 	if errquery != nil {
+		fmt.Println("Error disini ", errquery)
 		errorResponse.Status = http.StatusInternalServerError
 		errorResponse.Message = errquery
 		return nil, errorResponse
@@ -43,6 +42,8 @@ func (c CustomerRepoImpl) GetListCustomer(customerId int) ([]domain.AgentData, d
 		var cust domain.AgentData
 		errloop := rows.Scan(&cust.Id, &cust.NIK, &cust.FullName, &cust.LegalName, &cust.PlaceOfBirth, &cust.BirthDate, &cust.Gaji, &cust.FotoKTP, &cust.FotoSelfie)
 		if errloop != nil {
+			fmt.Println("Error disini ", errquery)
+
 			errorResponse.Status = http.StatusInternalServerError
 			errorResponse.Message = errloop
 			return nil, errorResponse

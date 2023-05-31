@@ -19,19 +19,18 @@ func CreateCustomerController(r *gin.Engine, customerService domain.CustomerServ
 
 	v1public := r.Group("/api/v1/sks/public")
 	{
-		v1public.POST("/list/customer", customerController.GetDataCustomer)
+		v1public.GET("/list/customer", customerController.GetDataCustomer)
 	}
 }
 
 func (u *CustomerController) GetDataCustomer(c *gin.Context) {
-	var request domain.AgentData
-	idRequest := request.Id
-	if err := c.BindJSON(&request); err != nil {
-		util.HandleError(c, http.StatusBadRequest, 400, util.ERR_BAD_REQUEST, err, util.ERR_BAD_REQUEST)
-		return
-	}
 
-	result, errorResponse := u.CustomerService.GetListCustomer(idRequest)
+	// if err := c.BindJSON(request.Id); err != nil {
+	// 	util.HandleError(c, http.StatusBadRequest, 400, util.ERR_BAD_REQUEST, err, util.ERR_BAD_REQUEST)
+	// 	return
+	// }
+
+	result, errorResponse := u.CustomerService.GetListCustomer()
 	if errorResponse.Message != nil {
 		if errorResponse.Status == http.StatusNotFound {
 			util.HandleError(c, errorResponse.Status, errorResponse.Status, errorResponse.Message.Error(), errorResponse.Message, errorResponse.Message.Error())

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
+
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -49,7 +50,10 @@ func initConnection(dbCon *dbMysql, server, user, pass, scheme, appIntent string
 
 func createConnectionMs(server, user, pass, scheme, appIntent string) (*sql.DB, error) {
 	confinsInfo := fmt.Sprintf("server=%s;user id=%s;password=%s;database=%s;%s", server, user, pass, scheme, appIntent)
-	conn, errdb := sql.Open("mssql", confinsInfo)
+	fmt.Println(confinsInfo)
+	//"root@tcp(localhost:3306)/pt_xyz_multifinance"
+	string := fmt.Sprintf("%s@%s/%s", user, server, scheme)
+	conn, errdb := sql.Open("mysql", string)
 	if errdb != nil {
 		return nil, errdb
 	}

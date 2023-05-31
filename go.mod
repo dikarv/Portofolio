@@ -3,12 +3,16 @@ module apixyz
 go 1.20
 
 require (
+	github.com/RaMin0/gin-health-check v0.0.0-20180807004848-a677317b3f01
 	github.com/alexcesaro/log v0.0.0-20150915221235-61e686294e58
 	github.com/gin-contrib/requestid v0.0.6
 	github.com/gin-gonic/gin v1.9.0
 	github.com/go-sql-driver/mysql v1.7.1
+	github.com/pkg/errors v0.9.1
+	github.com/rs/cors v1.9.0
 	github.com/sirupsen/logrus v1.9.2
 	github.com/spf13/viper v1.16.0
+	github.com/unrolled/secure v1.13.0
 )
 
 require (
