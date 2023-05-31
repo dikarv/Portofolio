@@ -1,6 +1,7 @@
 package domain
 
 type CustomerService interface {
+	Paymenst(customer, contract, installment int, Amount int) (*Response, ErrorData)
 	UpdateCustomerLimitAmount(customer, tenor, limit, total int) (*Response, ErrorData)
 	GetTenorAgent(id, tenor, limit int) (*ResponseAgentLimit, ErrorData)
 	Transaction(customer int, contractNo string, tenor, otr int, assetName, transactionType string) (*Response, ErrorData)
@@ -13,6 +14,7 @@ type CustomerService interface {
 }
 
 type CustomerRepository interface {
+	Paymenst(id, customer, contract, installment int, paymenDate string, Amount int) (*Response, ErrorData)
 	UpdateCustomerLimitAmount(customer, tenor, limit, total int) (*Response, ErrorData)
 	GetTenorAgent(id, tenor, limit int) (*ResponseAgentLimit, ErrorData)
 	Transaction(iD, customer int, contractNo string, total, tenor, otr, adminFee, installment, interestAmount int, assetName, transactionType, transactionDate string) (*Response, ErrorData)
@@ -67,6 +69,13 @@ type Listpayments struct {
 	Installment int    `json:"installment"`
 	PaymentDate string `json:"payment_date"`
 	Ammount     int    `json:"ammount"`
+}
+
+type Requestpayments struct {
+	CustomerId  int `json:"customer_id"`
+	ContractNo  int `json:"contract_no"`
+	Installment int `json:"installment"`
+	Ammount     int `json:"ammount"`
 }
 
 type Transactions struct {

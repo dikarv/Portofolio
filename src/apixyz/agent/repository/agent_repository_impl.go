@@ -12,6 +12,36 @@ import (
 type CustomerRepoImpl struct {
 }
 
+func (c CustomerRepoImpl) Paymenst(id, customer, contract, installment int, paymenDate string, Amount int) (*domain.Response, domain.ErrorData) {
+	var (
+		result        domain.Response
+		errorResponse domain.ErrorData
+	)
+
+	dbsks, err := database.GetConnectionSKS()
+	if err != nil {
+
+		errorResponse.Status = http.StatusInternalServerError
+		errorResponse.Message = errors.New("DB SKS Connection Closed for update")
+		return nil, errorResponse
+	}
+
+	query := `INSERT INTO payments(ID, Customer, ContractNo, Installment, PaymentDate, Amount) VALUES (?,?,?,?,?,?)`
+
+	data, err := dbsks.Exec(query, id, customer, contract, installment, paymenDate, Amount)
+
+	if err != nil {
+		errorResponse.Status = http.StatusInternalServerError
+		errorResponse.Message = err
+		return nil, errorResponse
+	}
+	result.Data = data
+	result.Message = "Data Succesfully Updated"
+	result.Status = "200"
+
+	return &result, errorResponse
+}
+
 func (c CustomerRepoImpl) UpdateCustomerLimitAmount(customer, tenor, limit, total int) (*domain.Response, domain.ErrorData) {
 	var (
 		result        domain.Response

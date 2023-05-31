@@ -25,8 +25,27 @@ func CreateCustomerController(r *gin.Engine, customerService domain.CustomerServ
 		v1public.POST("/list/limit", customerController.GetDataLimit)
 		v1public.POST("/transaction", customerController.TransactionData)
 		v1public.POST("/update/balance", customerController.UpdateBalance)
+		v1public.POST("/payments", customerController.Payments)
 
 	}
+}
+
+func (u *CustomerController) Payments(c *gin.Context) {
+	var request domain.Requestpayments
+
+	if err := c.BindJSON(&request); err != nil {
+		util.HandleError(c, http.StatusBadRequest, 400, util.ERR_BAD_REQUEST, err, util.ERR_BAD_REQUEST)
+		return
+	}
+
+	response, err := u.CustomerService.Paymenst(request.CustomerId, request.ContractNo, request.Installment, request.Ammount)
+
+	if err.Message != nil {
+		util.HandleError(c, err.Status, err.Status, util.ERR_GENERAL, err.Message, err.Message.Error())
+		return
+	}
+
+	util.HandleSuccess(c, http.StatusOK, 200, "Update Success", response, "Update Success", "Update Success")
 }
 
 func (u *CustomerController) UpdateBalance(c *gin.Context) {

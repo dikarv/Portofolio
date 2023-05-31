@@ -11,6 +11,20 @@ type CustomerServiceImpl struct {
 	custRepo domain.CustomerRepository
 }
 
+func (c CustomerServiceImpl) Paymenst(customer, contract, installment int, Amount int) (*domain.Response, domain.ErrorData) {
+
+	rand.Seed(time.Now().UnixNano())
+	randomNumber := rand.Intn(101)
+
+	currentTime := time.Now()
+
+	//Format the current time using a specific layout
+	formattedTime := currentTime.Format("2006-01-02")
+
+	return c.custRepo.Paymenst(randomNumber, customer, contract, installment, formattedTime, Amount)
+
+}
+
 func (c CustomerServiceImpl) UpdateCustomerLimitAmount(customer, tenor, limit, total int) (*domain.Response, domain.ErrorData) {
 
 	data, err := c.custRepo.GetTenorAgent(customer, tenor, limit)
