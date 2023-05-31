@@ -10,10 +10,11 @@
     "host"         : "127.0.0.1",
     "port"         : "5025",
     "environment"  : "development",
+    "realm":"YxzWeb100",
 
     "token":{
         "project_name":"XYZWEB",
-        "supersecretpassword":"durenkayang1223"
+        "supersecretpassword":"durenkayang!!1223"
     }
 }
 
