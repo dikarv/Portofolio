@@ -12,6 +12,100 @@ import (
 type CustomerRepoImpl struct {
 }
 
+func (c CustomerRepoImpl) UpdateCustomerLimitAmount(customer, tenor, limit, total int) (*domain.Response, domain.ErrorData) {
+	var (
+		result        domain.Response
+		errorResponse domain.ErrorData
+	)
+	fmt.Println(customer, total, tenor, limit, "HOMUNCULUS")
+
+	dbsks, err := database.GetConnectionSKS()
+	if err != nil {
+		fmt.Println("Error disini kocak", err)
+
+		errorResponse.Status = http.StatusInternalServerError
+		errorResponse.Message = errors.New("DB SKS Connection Closed for update")
+		return nil, errorResponse
+	}
+
+	query := `UPDATE customerlimits SET LimitAmount=? WHERE Customer = ? AND Tenor = ? AND LimitAmount=?`
+
+	data, err := dbsks.Exec(query, total, customer, tenor, limit)
+
+	if err != nil {
+		errorResponse.Status = http.StatusInternalServerError
+		errorResponse.Message = err
+		return nil, errorResponse
+	}
+	result.Data = data
+	result.Message = "Data Succesfully Updated"
+	result.Status = "200"
+
+	return &result, errorResponse
+}
+
+func (c CustomerRepoImpl) GetTenorAgent(id, tenor, limit int) (*domain.ResponseAgentLimit, domain.ErrorData) {
+
+	var (
+		result        domain.ResponseAgentLimit
+		errorResponse domain.ErrorData
+	)
+
+	dbsks, err := database.GetConnectionSKS()
+	if err != nil {
+		fmt.Println("Error disini uwow ", err)
+
+		errorResponse.Status = http.StatusInternalServerError
+		errorResponse.Message = errors.New("DB SKS Connection Closed Laundry")
+		return nil, errorResponse
+	}
+	fmt.Println(id, tenor, limit)
+	rows := dbsks.QueryRow("SELECT * FROM customerlimits WHERE Customer = ? AND Tenor = ? AND LimitAmount = ?", id, tenor, limit).Scan(&result.Id, &result.Customer, &result.Tenor, &result.LimitAmmount)
+
+	if rows != nil {
+		fmt.Println("Error disini uwow lebay", rows)
+		errorResponse.Status = http.StatusInternalServerError
+		errorResponse.Message = rows
+		return nil, errorResponse
+	}
+
+	if result.Tenor == 0 {
+		errorResponse.Status = http.StatusNotFound
+		errorResponse.Message = errors.New("Data Not Found")
+		return nil, errorResponse
+	} else {
+		return &result, domain.ErrorData{}
+	}
+}
+
+func (c CustomerRepoImpl) Transaction(iD, customer int, contractNo string, total, tenor, otr, adminFee, installment, interestAmount int, assetName, transactionType, transactionDate string) (*domain.Response, domain.ErrorData) {
+	var (
+		result        domain.Response
+		errorResponse domain.ErrorData
+	)
+
+	dbsks, err := database.GetConnectionSKS()
+	if err != nil {
+		errorResponse.Status = http.StatusInternalServerError
+		errorResponse.Message = errors.New("DB SKS Connection Closed Money")
+		return nil, errorResponse
+	}
+
+	query := `INSERT INTO transactions (ID, Customer, ContractNo, Total, Tenor, OTR, AdminFee, Installment, InterestAmount, AssetName, TransactionType, TransactionDate) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+	errQuery := dbsks.QueryRow(query, iD, customer, contractNo, total, tenor, otr, adminFee, installment, interestAmount, assetName, transactionType, transactionDate)
+	if errQuery != nil {
+		errorResponse.Status = http.StatusInternalServerError
+		errorResponse.Message = errQuery.Err()
+		return nil, errorResponse
+	}
+	result.Data = "Transaction Success"
+	result.Message = "Data Succesfully Inserted"
+	result.Status = "200"
+
+	return &result, domain.ErrorData{}
+}
+
 func (c CustomerRepoImpl) GetGajiAgent(id int) (int, domain.ErrorData) {
 
 	var (

@@ -1,6 +1,9 @@
 package domain
 
 type CustomerService interface {
+	UpdateCustomerLimitAmount(customer, tenor, limit, total int) (*Response, ErrorData)
+	GetTenorAgent(id, tenor, limit int) (*ResponseAgentLimit, ErrorData)
+	Transaction(customer int, contractNo string, tenor, otr int, assetName, transactionType string) (*Response, ErrorData)
 	GetDataListTenor(id int) ([]AgentLimit, ErrorData)
 	GetGajiAgent(id int) (int, ErrorData)
 	GetDataLimit(id int) ([]AgentLimit, ErrorData)
@@ -10,6 +13,9 @@ type CustomerService interface {
 }
 
 type CustomerRepository interface {
+	UpdateCustomerLimitAmount(customer, tenor, limit, total int) (*Response, ErrorData)
+	GetTenorAgent(id, tenor, limit int) (*ResponseAgentLimit, ErrorData)
+	Transaction(iD, customer int, contractNo string, total, tenor, otr, adminFee, installment, interestAmount int, assetName, transactionType, transactionDate string) (*Response, ErrorData)
 	GetGajiAgent(id int) (int, ErrorData)
 	GetLimitAgent(id int) ([]AgentLimit, ErrorData)
 	InsertUpdateCustomerLimit(id, customer, tenor, limit int) (*Response, ErrorData)
@@ -40,6 +46,20 @@ type AgentLimit struct {
 	LimitAmmount int `json:"limit_ammount"`
 }
 
+type ResponseAgentLimit struct {
+	Id           int `json:"id"`
+	Customer     int `json:"customer_id"`
+	Tenor        int `json:"tenor"`
+	LimitAmmount int `json:"limit_ammount"`
+}
+
+type RequestUpdateAgentLimit struct {
+	Total        int `json:"total"`
+	Customer     int `json:"customer_id"`
+	Tenor        int `json:"tenor"`
+	LimitAmmount int `json:"limit_ammount"`
+}
+
 type Listpayments struct {
 	Id          int    `json:"id"`
 	CustomerId  int    `json:"customer_id"`
@@ -53,6 +73,7 @@ type Transactions struct {
 	Id              int    `json:"id"`
 	CustomerId      int    `json:"customer_id"`
 	ContractNo      string `json:"contract_no"`
+	Tenor           int    `json:"tenor"`
 	Otr             int    `json:"otr"`
 	AdminFee        int    `json:"admin_fee"`
 	Installment     int    `json:"installment"`
@@ -60,4 +81,13 @@ type Transactions struct {
 	Assetname       string `json:"asset_name"`
 	TransactionType string `json:"transaction_type"`
 	TransactionDate string `json:"transaction_date"`
+}
+
+type TransactionsReq struct {
+	CustomerId      int    `json:"customer_id"`
+	ContractNo      string `json:"contract_no"`
+	Tenor           int    `json:"tenor"`
+	Otr             int    `json:"otr"`
+	Assetname       string `json:"asset_name"`
+	TransactionType string `json:"transaction_type"`
 }

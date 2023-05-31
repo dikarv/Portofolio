@@ -12,6 +12,46 @@ type CustomerServiceImpl struct {
 	custRepo domain.CustomerRepository
 }
 
+func (c CustomerServiceImpl) UpdateCustomerLimitAmount(customer, tenor, limit, total int) (*domain.Response, domain.ErrorData) {
+
+	data, err := c.custRepo.GetTenorAgent(customer, tenor, limit)
+	if err.Message != nil {
+		return nil, domain.ErrorData{}
+	}
+
+	newAmountCust := data.LimitAmmount - total
+	fmt.Println(newAmountCust, "HOMUNCULUS")
+
+	return c.custRepo.UpdateCustomerLimitAmount(customer, tenor, limit, newAmountCust)
+}
+
+func (c CustomerServiceImpl) GetTenorAgent(id, tenor, limit int) (*domain.ResponseAgentLimit, domain.ErrorData) {
+	return c.custRepo.GetTenorAgent(id, tenor, limit)
+}
+func (c CustomerServiceImpl) Transaction(customer int, contractNo string, tenor, otr int, assetName, transactionType string) (*domain.Response, domain.ErrorData) {
+	rand.Seed(time.Now().UnixNano())
+	randomNumber := rand.Intn(101)
+
+	currentTime := time.Now()
+
+	//Format the current time using a specific layout
+	formattedTime := currentTime.Format("2006-01-02")
+
+	newAdminFee := otr / 70
+	newInstallment := otr / tenor
+	newInterestAmount := otr / 30
+
+	fmt.Printf("  %d, %s, %d, %d, %s, %s, ", contractNo, tenor, otr, assetName, transactionType)
+	fmt.Printf("%d,  %d, %d ", newAdminFee, newInstallment, newInterestAmount)
+
+	total := newInstallment*tenor + newInterestAmount*tenor + newAdminFee
+	fmt.Println("TOTALNYA ADALAH = ", total)
+	cicilan := total / tenor
+	fmt.Println("Cicilan =", cicilan)
+
+	return c.custRepo.Transaction(randomNumber, customer, contractNo, total, tenor, otr, newAdminFee, cicilan, newInterestAmount, assetName, transactionType, formattedTime)
+
+}
 func (c CustomerServiceImpl) GetGajiAgent(id int) (int, domain.ErrorData) {
 	return c.custRepo.GetGajiAgent(id)
 }

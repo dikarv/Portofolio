@@ -23,8 +23,44 @@ func CreateCustomerController(r *gin.Engine, customerService domain.CustomerServ
 		v1public.POST("/register/customer", customerController.InsertAgent)
 		v1public.POST("/insert/limit", customerController.InsertTenor)
 		v1public.POST("/list/limit", customerController.GetDataLimit)
+		v1public.POST("/transaction", customerController.TransactionData)
+		v1public.POST("/update/balance", customerController.UpdateBalance)
 
 	}
+}
+
+func (u *CustomerController) UpdateBalance(c *gin.Context) {
+	var request domain.RequestUpdateAgentLimit
+	if err := c.BindJSON(&request); err != nil {
+		util.HandleError(c, http.StatusBadRequest, 400, util.ERR_BAD_REQUEST, err, util.ERR_BAD_REQUEST)
+		return
+	}
+
+	response, err := u.CustomerService.UpdateCustomerLimitAmount(request.Customer, request.Tenor, request.LimitAmmount, request.Total)
+
+	if err.Message != nil {
+		util.HandleError(c, err.Status, err.Status, util.ERR_GENERAL, err.Message, err.Message.Error())
+		return
+	}
+
+	util.HandleSuccess(c, http.StatusOK, 200, "Update Success", response, "Update Success", "Update Success")
+
+}
+
+func (u *CustomerController) TransactionData(c *gin.Context) {
+	var request domain.TransactionsReq
+	if err := c.BindJSON(&request); err != nil {
+		util.HandleError(c, http.StatusBadRequest, 400, util.ERR_BAD_REQUEST, err, util.ERR_BAD_REQUEST)
+		return
+	}
+	response, err := u.CustomerService.Transaction(request.CustomerId, request.ContractNo, request.Tenor, request.Otr, request.Assetname, request.TransactionType)
+
+	if err.Message != nil {
+		util.HandleError(c, err.Status, err.Status, util.ERR_GENERAL, err.Message, err.Message.Error())
+		return
+	}
+
+	util.HandleSuccess(c, http.StatusOK, 200, "Transaction Success", response, "Transaction Success", "Transaction Success")
 }
 
 func (u *CustomerController) GetDataLimit(c *gin.Context) {
