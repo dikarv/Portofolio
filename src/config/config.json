@@ -1,0 +1,19 @@
+{
+    "database" : {
+        "server"   : "127.0.0.1",
+        "user"     : "root",
+        "password" : "",
+        "schema"   : "pt_xyz_multifinance"
+    },
+    "timeout": 100,
+    "host"         : "127.0.0.1",
+    "port"         : "3306",
+    "environment"  : "development",
+
+    "token":{
+        "project_name":"XYZWEB",
+        "supersecretpassword":"durenkayang1223"
+    }
+}
+
+
