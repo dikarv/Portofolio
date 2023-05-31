@@ -2,7 +2,6 @@ package service
 
 import (
 	"apixyz/src/apixyz/domain"
-	"fmt"
 
 	"math/rand"
 	"time"
@@ -20,7 +19,6 @@ func (c CustomerServiceImpl) UpdateCustomerLimitAmount(customer, tenor, limit, t
 	}
 
 	newAmountCust := data.LimitAmmount - total
-	fmt.Println(newAmountCust, "HOMUNCULUS")
 
 	return c.custRepo.UpdateCustomerLimitAmount(customer, tenor, limit, newAmountCust)
 }
@@ -40,14 +38,8 @@ func (c CustomerServiceImpl) Transaction(customer int, contractNo string, tenor,
 	newAdminFee := otr / 70
 	newInstallment := otr / tenor
 	newInterestAmount := otr / 30
-
-	fmt.Printf("  %d, %s, %d, %d, %s, %s, ", contractNo, tenor, otr, assetName, transactionType)
-	fmt.Printf("%d,  %d, %d ", newAdminFee, newInstallment, newInterestAmount)
-
 	total := newInstallment*tenor + newInterestAmount*tenor + newAdminFee
-	fmt.Println("TOTALNYA ADALAH = ", total)
 	cicilan := total / tenor
-	fmt.Println("Cicilan =", cicilan)
 
 	return c.custRepo.Transaction(randomNumber, customer, contractNo, total, tenor, otr, newAdminFee, cicilan, newInterestAmount, assetName, transactionType, formattedTime)
 
@@ -93,8 +85,6 @@ func (c CustomerServiceImpl) GetDataLimit(id int) ([]domain.AgentLimit, domain.E
 
 	// Tunggu goroutine selesai
 	time.Sleep(1 * time.Second)
-
-	fmt.Println("Selesai")
 
 	return c.custRepo.GetLimitAgent(id)
 }

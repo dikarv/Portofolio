@@ -5,7 +5,7 @@ import (
 	"apixyz/src/apixyz/domain"
 	"database/sql"
 	"errors"
-	"fmt"
+
 	"net/http"
 )
 
@@ -17,11 +17,9 @@ func (c CustomerRepoImpl) UpdateCustomerLimitAmount(customer, tenor, limit, tota
 		result        domain.Response
 		errorResponse domain.ErrorData
 	)
-	fmt.Println(customer, total, tenor, limit, "HOMUNCULUS")
 
 	dbsks, err := database.GetConnectionSKS()
 	if err != nil {
-		fmt.Println("Error disini kocak", err)
 
 		errorResponse.Status = http.StatusInternalServerError
 		errorResponse.Message = errors.New("DB SKS Connection Closed for update")
@@ -53,17 +51,16 @@ func (c CustomerRepoImpl) GetTenorAgent(id, tenor, limit int) (*domain.ResponseA
 
 	dbsks, err := database.GetConnectionSKS()
 	if err != nil {
-		fmt.Println("Error disini uwow ", err)
 
 		errorResponse.Status = http.StatusInternalServerError
 		errorResponse.Message = errors.New("DB SKS Connection Closed Laundry")
 		return nil, errorResponse
 	}
-	fmt.Println(id, tenor, limit)
+
 	rows := dbsks.QueryRow("SELECT * FROM customerlimits WHERE Customer = ? AND Tenor = ? AND LimitAmount = ?", id, tenor, limit).Scan(&result.Id, &result.Customer, &result.Tenor, &result.LimitAmmount)
 
 	if rows != nil {
-		fmt.Println("Error disini uwow lebay", rows)
+
 		errorResponse.Status = http.StatusInternalServerError
 		errorResponse.Message = rows
 		return nil, errorResponse
@@ -115,7 +112,6 @@ func (c CustomerRepoImpl) GetGajiAgent(id int) (int, domain.ErrorData) {
 
 	dbsks, err := database.GetConnectionSKS()
 	if err != nil {
-		fmt.Println("Error disini ", err)
 
 		errorResponse.Status = http.StatusInternalServerError
 		errorResponse.Message = errors.New("DB SKS Connection Closed")
@@ -125,7 +121,7 @@ func (c CustomerRepoImpl) GetGajiAgent(id int) (int, domain.ErrorData) {
 	rows := dbsks.QueryRow("SELECT Gaji FROM customers WHERE ID = ?", id).Scan(&result.Gaji)
 
 	if rows != nil {
-		fmt.Println("Error disini ", rows)
+
 		errorResponse.Status = http.StatusInternalServerError
 		errorResponse.Message = rows
 		return 0, errorResponse
@@ -146,7 +142,6 @@ func (c CustomerRepoImpl) GetLimitAgent(id int) ([]domain.AgentLimit, domain.Err
 
 	dbsks, err := database.GetConnectionSKS()
 	if err != nil {
-		fmt.Println("Error disini ", err)
 
 		errorResponse.Status = http.StatusInternalServerError
 		errorResponse.Message = errors.New("DB SKS Connection Closed")
@@ -156,7 +151,7 @@ func (c CustomerRepoImpl) GetLimitAgent(id int) ([]domain.AgentLimit, domain.Err
 	rows, errquery := dbsks.Query("SELECT * FROM customerlimits WHERE Customer = ?", id)
 
 	if errquery != nil {
-		fmt.Println("Error disini ", errquery)
+
 		errorResponse.Status = http.StatusInternalServerError
 		errorResponse.Message = errquery
 		return nil, errorResponse
@@ -168,7 +163,6 @@ func (c CustomerRepoImpl) GetLimitAgent(id int) ([]domain.AgentLimit, domain.Err
 		var cust domain.AgentLimit
 		errloop := rows.Scan(&cust.Id, &cust.Customer, &cust.Tenor, &cust.LimitAmmount)
 		if errloop != nil {
-			fmt.Println("Error disini ", errquery)
 
 			errorResponse.Status = http.StatusInternalServerError
 			errorResponse.Message = errloop
@@ -195,7 +189,6 @@ func (c CustomerRepoImpl) InsertUpdateCustomerLimit(id, customer, tenor, limit i
 
 	dbsks, err := database.GetConnectionSKS()
 	if err != nil {
-		fmt.Println("Error disini ", err)
 
 		errorResponse.Status = http.StatusInternalServerError
 		errorResponse.Message = errors.New("DB SKS Connection Closed")
@@ -227,7 +220,6 @@ func (c CustomerRepoImpl) InsertUpdateCustomer(id int, nik, fullname, legalname,
 
 	dbsks, err := database.GetConnectionSKS()
 	if err != nil {
-		fmt.Println("Error disini ", err)
 
 		errorResponse.Status = http.StatusInternalServerError
 		errorResponse.Message = errors.New("DB SKS Connection Closed")
@@ -259,7 +251,6 @@ func (c CustomerRepoImpl) GetListCustomer() ([]domain.AgentData, domain.ErrorDat
 
 	dbsks, err := database.GetConnectionSKS()
 	if err != nil {
-		fmt.Println("Error disini ", errquery)
 
 		errorResponse.Status = http.StatusInternalServerError
 		errorResponse.Message = errors.New("DB SKS Connection Closed")
@@ -269,7 +260,7 @@ func (c CustomerRepoImpl) GetListCustomer() ([]domain.AgentData, domain.ErrorDat
 	rows, errquery = dbsks.Query("SELECT * FROM customers")
 
 	if errquery != nil {
-		fmt.Println("Error disini ", errquery)
+
 		errorResponse.Status = http.StatusInternalServerError
 		errorResponse.Message = errquery
 		return nil, errorResponse
@@ -281,7 +272,6 @@ func (c CustomerRepoImpl) GetListCustomer() ([]domain.AgentData, domain.ErrorDat
 		var cust domain.AgentData
 		errloop := rows.Scan(&cust.Id, &cust.NIK, &cust.FullName, &cust.LegalName, &cust.PlaceOfBirth, &cust.BirthDate, &cust.Gaji, &cust.FotoKTP, &cust.FotoSelfie)
 		if errloop != nil {
-			fmt.Println("Error disini ", errquery)
 
 			errorResponse.Status = http.StatusInternalServerError
 			errorResponse.Message = errloop
