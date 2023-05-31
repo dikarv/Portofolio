@@ -1,11 +1,24 @@
 package domain
 
 type CustomerService interface {
+	GetDataListTenor(id int) ([]AgentLimit, ErrorData)
+	GetGajiAgent(id int) (int, ErrorData)
+	GetDataLimit(id int) ([]AgentLimit, ErrorData)
 	GetListCustomer() ([]AgentData, ErrorData)
+	InsertUpdateCustomer(id int, nik, fullname, legalname, placeOfbirth, birthdate string, gaji int, ktp, selfie string) (*Response, ErrorData)
+	InsertUpdateCustomerLimit(id, customer, tenor, limit int) (*Response, ErrorData)
 }
 
 type CustomerRepository interface {
+	GetGajiAgent(id int) (int, ErrorData)
+	GetLimitAgent(id int) ([]AgentLimit, ErrorData)
+	InsertUpdateCustomerLimit(id, customer, tenor, limit int) (*Response, ErrorData)
 	GetListCustomer() ([]AgentData, ErrorData)
+	InsertUpdateCustomer(id int, nik, fullname, legalname, placeOfbirth, birthdate string, gaji int, ktp, selfie string) (*Response, ErrorData)
+}
+
+type RequestIdTenor struct {
+	Id int `json:"id"`
 }
 
 type AgentData struct {
@@ -15,7 +28,7 @@ type AgentData struct {
 	LegalName    string `json:"legal_name"`
 	PlaceOfBirth string `json:"place_of_birth"`
 	BirthDate    string `json:"birth_date"`
-	Gaji         string `json:"gaji"`
+	Gaji         int    `json:"gaji"`
 	FotoKTP      string `json:"foto_ktp"`
 	FotoSelfie   string `json:"foto_selfie"`
 }
