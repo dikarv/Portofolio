@@ -1,16 +1,16 @@
 # Portofolio
+
+
+
 Aplikasi Simple Manajemen Pembiayaan Kendaraan menggunakan Go  
 
 
-Aplikasi Simple Manajemen Pembiayaan Kendaraan menggunakan Go  
-
-
-Fitur yang tersedia 
-Pendataan Nasabah menggunakan Database Mysql
-Management data nasabah
-Pendataan Transaksi Setiap Nasabah
-Validasi transaksi Nasabah
-Pendataan Pembayaran Nasabah
+Fitur yang tersedia :
+1.Pendataan Nasabah menggunakan Database Mysql
+2.Management data nasabah
+3.Pendataan Transaksi Setiap Nasabah
+4.Validasi transaksi Nasabah
+5.Pendataan Pembayaran Nasabah
 
 API yang bisa Digunakan
 
